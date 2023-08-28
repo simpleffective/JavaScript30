@@ -27,6 +27,12 @@
       misc styles, nothing to do with CSS variables
     */
 
+    :root {
+      --base: #ffc600;
+      --spacing: 10;
+      --blur: 10;
+    }
+    
     body {
       text-align: center;
       background: #193549;
@@ -34,6 +40,15 @@
       font-family: 'helvetica neue', sans-serif;
       font-weight: 100;
       font-size: 50px;
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
+    img {
+      filter: blur(var(--blur));
+      border: var(--base) var(--spacing) solid;
     }
 
     .controls {
@@ -46,6 +61,13 @@
   </style>
 
   <script>
+    const inputs= document.querySelectorAll('.controls input')
+    
+    inputs.forEach(input => input.addEventListener('input', changeVar))
+    function changeVar() {
+      const suffix = this.dataset.sizing || '';
+      document.documentElement.style.setProperty(`--${this.id}`, this.value+suffix);
+    }
   </script>
 
 </body>
