@@ -85,7 +85,7 @@
     }
 
     .panel.open {
-      flex: 5;
+      flex-grow: 5;
       font-size: 40px;
     }
 
@@ -98,7 +98,7 @@
 
 
   <div class="panels">
-    <div class="panel panel1">
+    <div class="panel panel1" >
       <p>Hey</p>
       <p>Let's</p>
       <p>Dance</p>
@@ -127,11 +127,10 @@
 
   <script>
     const panels = document.querySelectorAll('.panel');
-
+  
     function toggleOpen() {
-      console.log('Hello');
       this.classList.toggle('open');
-    }
+      }
 
     function toggleActive(e) {
       console.log(e.propertyName);
