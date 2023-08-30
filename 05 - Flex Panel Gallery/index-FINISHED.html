@@ -68,6 +68,12 @@
       align-items: center;
     }
 
+    /*
+    Here, we take advantage of CSS specificity. 
+    when open-active isn't a class of panel, we have .panel > :first-child determining the behaviour.
+    but .panel.open-active > :first-child is more specific as we're using two classes, that's why its transform overrides the previous one, making the element show up.
+    when not using the .open-active class, the latest transform appearing in the code "wins", overriding the previous ones.
+    */
     .panel > *:first-child { transform: translateY(-100%); }
     .panel.open-active > *:first-child { transform: translateY(0); }
     .panel > *:last-child { transform: translateY(100%); }
@@ -132,13 +138,21 @@
       this.classList.toggle('open');
       }
 
+    /* 
+      Why is the    if (e.propertyName.includes('flex'))     condition neccesary?
+      if you remove it, the transform doesn't happen.
+      this happens because we use the toggle function, and simply because we have two "transitionend" events - one for flex-grow, one for font-size.
+      that means we run toggleActive() twice, and toggle the open-active class twice, effectively turning it on and off again, back-to-back.
+      try to remove either flex-geow or font-size transitions, it'll work because the toggleActive() function will run only once (any odd number will work).
+      by using the condition we ensure that the toggle is done only once.
+    */
     function toggleActive(e) {
       console.log(e.propertyName);
       if (e.propertyName.includes('flex')) {
         this.classList.toggle('open-active');
       }
     }
-
+    
     panels.forEach(panel => panel.addEventListener('click', toggleOpen));
     panels.forEach(panel => panel.addEventListener('transitionend', toggleActive));
   </script>
