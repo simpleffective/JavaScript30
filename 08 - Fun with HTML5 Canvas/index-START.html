@@ -6,13 +6,73 @@
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
 <body>
-<canvas id="draw" width="800" height="800"></canvas>
+<canvas id="canvas" width="800" height="800"></canvas>
+
 <script>
+const canvas = document.querySelector("#canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+console.log(ctx);
+ctx.strokeStyle = '#BADA55';
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+ctx.lineWidth = 100;
+let hue =0 ;
+let lastX = 0;
+let lastY = 0;
+let lineWidth = 100;
+let direction = false;
+
+window.addEventListener("load", initCanvas)
+
+function initCanvas() {
+  window.onmousedown = (e) => {
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    canvas.onmousemove = draw;
+  };
+  window.onmouseup = () => canvas.onmousemove = null;
+}
+
+function printMousePos(event) {
+  console.log(`(${event.offsetX},${event.offsetY})`);
+}
+
+function draw(evt) {
+  console.log("sdnahdsa");
+  // printMousePos(evt);
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+  ctx.lineWidth = lineWidth
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  // ctx.moveTo(this.clientX, this.clientY);
+  ctx.lineTo(evt.offsetX, evt.offsetY);
+  ctx.stroke();
+  [lastX, lastY] = [evt.offsetX, evt.offsetY];
+
+  hue++;
+  if (hue >= 360) {
+    hue = 0;
+  }
+  if (lineWidth >= 100 || lineWidth <= 1)
+    direction = !direction
+  if (direction)
+    lineWidth--;
+  else
+    lineWidth++;
+  console.log(direction, ctx.lineWidth);
+  
+}
+
+
 </script>
 
 <style>
   html, body {
     margin: 0;
+  }
+  canvas {
+    border: 1px solid black;
   }
 </style>
 
