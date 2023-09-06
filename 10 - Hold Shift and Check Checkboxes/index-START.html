@@ -97,6 +97,74 @@
   </div>
 
 <script>
+  // keep last clicked / inputted checkbox (wb checking with keyboard?)  := checkbox set . clear it on focusout event
+  // on checkbox set, check if Shift is pressed down and if last clicked exists
+  // if the set checkbox is unchecked, set every checkbox inbetween, inclusive
+  // ? how to get checkboxes between? 
+  //  * put all in array, search their index in it
+  //  * listen on div, traverse siblings until reach
+
+  var startCheckbox = null;
+  var isShiftPressed = false;
+
+  const cbs = Array.from(document.querySelectorAll('.item input[type="checkbox"]'));
+  cbs.forEach(cb => {
+    cb.onclick = function(evt) {
+    let currCheckbox = evt.target;
+    console.log(`in onclick: 
+    start: ${startCheckbox? startCheckbox.nextElementSibling.textContent : 0}
+    curr: ${currCheckbox.nextElementSibling.textContent}\t checked=${currCheckbox.checked}`);
+    
+    if(startCheckbox && isShiftPressed && currCheckbox.checked) {
+      checkRange(startCheckbox, currCheckbox);
+    }
+
+    startCheckbox = currCheckbox;
+    // cb.onblur = function(){ startCheckbox = null;console.log(`in onblur: ${startCheckbox? startCheckbox.nextElementSibling.textContent : null}`);};
+    // cb.onfocus = function(evt){startCheckbox = evt.target; console.log(`in onfocus: ${startCheckbox.nextElementSibling.textContent}`);};
+    }
+  })
+
+  function checkRange(startCheckbox, endCheckbox) {
+    
+    startIdx = cbs.findIndex(cb => cb === startCheckbox);
+    endIdx = cbs.findIndex(cb => cb === endCheckbox);
+    cbs.slice(startIdx, endIdx + 1).forEach(cb => cb.checked = true);
+  }
+
+  // listen on Shift
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "Shift") {
+      isShiftPressed = true;
+    }
+  });
+
+  document.addEventListener("keyup", function(event) {
+    if (event.key === "Shift") {
+      isShiftPressed = false;
+    }
+  });
+
+
+
+  // // event test
+  // console.log(document.querySelector('.item:last-child'));
+  // const cb = document.querySelector('.inbox input:last-of-type')
+  // console.log(cb.nextElementSibling.textContent);
+  // cb.onclick = () => console.warn('godlick')
+  // cb.oninput = () => console.error('onmyput')
+  // //  * works with both
+
+  // // containing div input test
+  // const div = cb.closest('div')
+  // console.log(`div: ${div}`);
+  // div.oninput = () => console.log('divving it');
+  // console.log(div.nextElementSibling);
+
+  // grab all checkboxes
+  
+  
+  
 </script>
 </body>
 </html>
