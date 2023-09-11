@@ -44,9 +44,11 @@
   </div>
 
   <script>
-    function debounce(func, wait = 20, immediate = true) {
+    function debounce_full(func, wait = 2100, immediate = true) {
       var timeout;
       return function() {
+        console.log('heree')
+        debugger
         var context = this, args = arguments;
         var later = function() {
           timeout = null;
@@ -58,6 +60,35 @@
         if (callNow) func.apply(context, args);
       };
     }
+
+    function debounce(fn, delay) {
+      var timeout;
+      return () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn(), delay);
+      };
+    }
+
+
+    window.scrollTo(0,1000);
+    const images = document.querySelectorAll('img');
+    window.onscroll = debounce(checkImagesPosition);
+
+    function checkImagesPosition() {  
+      const viewportTop = window.scrollY || window.pageYOffset;
+      const viewportBottom = viewportTop + window.innerHeight;
+      images.forEach(img => {
+        // const makeActive = debounce((img) => img.classList.add('active'))
+        // const makeInactive = debounce((img) => img.classList.remove('active'))
+        const imgTop = img.getBoundingClientRect().top + viewportTop;
+        const imgBottom = img.getBoundingClientRect().bottom + viewportTop;
+        if ((imgTop + (imgBottom - imgTop) / 2 <= viewportBottom) && viewportTop <= imgBottom)
+          img.classList.add('active')
+        else 
+          img.classList.remove('active')
+      })
+    }
+
 
   </script>
 
