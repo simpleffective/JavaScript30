@@ -29,7 +29,47 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const items = JSON.parse(localStorage.getItem("items")) || [];
+  let num_plates = items.length
+
+  function addItem(event) {
+    event.preventDefault();
+    const inputEle = addItems.querySelector('input[type=text]')
+    const plate = inputEle.value
+    itemsList.innerHTML +=
+        `<li>
+          <input type="checkbox" name="cb${num_plates}" checked>
+          <label for="cb${num_plates}" data-idx="${num_plates}">${plate}</label>
+          </li>`      
+    items.push(plate);
+    num_plates++;
+    localStorage.setItem('items',JSON.stringify(items))
+  }
+
+  function toggleCheck(event) {
+    if (!(event.target.tagName === 'LABEL'))
+      return;
+    const li = Array.from(this.querySelectorAll('li')).find(li => {
+      const label = li.querySelector('label')
+      return event.target.dataset.idx === label.dataset.idx;
+    })
+    const cb = li.querySelector('input')
+    cb.checked = !cb.checked
+  }
+
+  function populateList() {
+    itemsList.innerHTML = items.map((plate, id) => {
+      return `<li>
+          <input type="checkbox" name="cb${id}" checked>
+          <label  data-idx="${id}" for="cb${id}">${plate}</label>
+          </li>`
+    }).join('');
+  }
+  
+  addItems.onsubmit = addItem
+  itemsList.onclick = toggleCheck
+
+  populateList()
 
 </script>
 
